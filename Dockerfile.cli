@@ -1,5 +1,11 @@
 FROM amazeeio/php:7.2-cli-drupal
 
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS openldap-dev && \
+    docker-php-ext-install ldap  && \
+    apk del .phpize-deps
+
 COPY composer.json composer.lock /app/
 COPY scripts /app/scripts
 RUN composer install --no-dev
